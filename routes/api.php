@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,10 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('info', function () {
-    return 'Test';
+/** Авторизация **/
+//Route::middleware(['auth:api', 'role:admin'])->post('/login', [UserController::class, 'login']);
+Route::post('/login', [UserController::class, 'login']);
+
+Route::group(['middleware' => ['role:manager']], function () {
+  Route::get('info', function () {
+    return 'Test back';
+  });
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+  return $request->user();
 });
